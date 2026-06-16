@@ -101,8 +101,8 @@ python server.py
 ```
 
 ### 4. Access the App
-Open your browser and navigate to:
-👉 **[http://127.0.0.1:5000/](http://127.0.0.1:5000/)**
+* **Live Hosted Demo**: 👉 **[https://parkflow-ai.onrender.com/](https://parkflow-ai.onrender.com/)**
+* **Local Development**: 👉 **[http://127.0.0.1:5000/](http://127.0.0.1:5000/)**
 
 ---
 
