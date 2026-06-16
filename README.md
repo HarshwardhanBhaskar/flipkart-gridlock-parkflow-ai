@@ -2,40 +2,52 @@
 
 > **Flipkart Gridlock Hackathon 2.0 — Round 2 Prototype Submission**
 
+[![Python Version](https://img.shields.io/badge/Python-3.10%20%7C%203.11%20%7C%203.12-blue.svg)](https://python.org)
+[![Flask](https://img.shields.io/badge/Flask-3.0.x-green.svg)](https://flask.palletsprojects.com/)
+[![ML Ensemble](https://img.shields.io/badge/ML--Ensemble-LightGBM%20%7C%20XGBoost%20%7C%20CatBoost-orange.svg)](#1-ml-prediction-engine-phase-1)
+[![Leaflet](https://img.shields.io/badge/Leaflet-1.9.4-brightgreen.svg)](https://leafletjs.com/)
+[![Chart.js](https://img.shields.io/badge/Chart.js-4.4.x-blueviolet.svg)](https://chartjs.org/)
+
 ParkFlow AI is an end-to-end intelligent traffic management system that combines **machine learning demand prediction** with a **real-time interactive dashboard** to help municipal authorities identify, prioritize, and resolve illegal parking hotspots that cause urban congestion.
 
 ---
 
 ## 🎯 Problem Statement
 
-Illegal parking in dense urban corridors reduces effective road capacity, creating bottleneck congestion that cascades across entire road networks. Current enforcement is reactive and resource-inefficient — officers patrol randomly instead of being dispatched to the highest-impact locations.
+Illegal parking in dense urban corridors reduces effective road capacity, creating bottleneck congestion that cascades across entire road networks. Current enforcement is reactive and resource-inefficient — officers patrol randomly instead of being dispatched to the highest-impact locations. 
 
-## 💡 Our Solution
-
-### 1. ML Prediction Engine (Phase 1)
-A high-performance **ensemble model** combining LightGBM, XGBoost, and CatBoost to predict traffic demand at any location and time:
-
-- **Spatial Feature Engineering** — Geohash decoding to lat/long + K-Means clustering (K=15)
-- **Cyclic Temporal Encoding** — Trigonometric hour/day encoding for continuous time patterns
-- **Out-of-Fold Target Encoding** — Leakage-free historical baseline demand per location
-- **5-Fold Cross-Validation** — Robust ensemble with optimized blending weights
-
-### 2. Interactive Dashboard (Phase 2 Prototype)
-A Flask-powered **real-time congestion intelligence dashboard** featuring:
-
-- 🗺️ **Interactive Leaflet Map** — Color-coded enforcement hotspots across Bengaluru with in-place maximize/minimize
-- 📊 **Dual Analytics Charts** — City-wide diurnal trends + per-location hourly violation/demand curves
-- 🎛️ **What-If Simulation Engine** — Slide to simulate clearing illegally parked vehicles and see real-time economic savings (₹)
-- 📋 **Priority Dispatch Panel** — Auto-ranked enforcement zones by Targeted Enforcement Priority (TEP) index
-- 💰 **Economic Impact Calculator** — Hourly congestion cost estimation in Indian Rupees (₹)
+**ParkFlow AI** transitions enforcement from reactive to predictive by estimating spatial-temporal traffic demand and calculating the exact economic and delay impacts of illegal parking hotspots.
 
 ---
 
-## 🖥️ Screenshots
+## 🖥️ Live Dashboard Preview
 
-| Dashboard Overview | Location Inspector |
-|---|---|
-| Interactive map with violation hotspots | Sliding panel with simulation engine |
+| **Interactive Hotspot Map (Bengaluru)** | **Location Inspector & What-If Simulation** |
+|:---:|:---:|
+| ![Dashboard Overview](docs/screenshots/dashboard_overview.png) | ![Location Inspector](docs/screenshots/location_inspector.png) |
+| *Color-coded enforcement zones showing Leaflet-based spatial clusters with dynamic intensity scaling.* | *Detail view with diurnal demand curves, priority ranking, and real-time congestion mitigation slider.* |
+
+---
+
+## 💡 Key Features
+
+### 1. ML Prediction Engine (Phase 1)
+A high-performance **ensemble model** combining LightGBM, XGBoost, and CatBoost to predict traffic demand at any location and time:
+* 🗺️ **Spatial Feature Engineering** — Geohash decoding to lat/long + K-Means clustering ($K=15$)
+* 🕒 **Cyclic Temporal Encoding** — Trigonometric sine/cosine hour & day encoding to preserve continuous time boundaries
+* 📈 **Out-of-Fold Target Encoding** — Leakage-free historical baseline demand mapped to spatiotemporal slots
+* ⚖️ **5-Fold Cross-Validation Blending** — Weighted ensemble optimizing prediction stability across highly variable congestion windows
+
+### 2. Intelligent Bottleneck Engine (Phase 2)
+The backend dynamically processes prediction values and real-world violation stats using custom traffic metrics:
+* ⚙️ **Congestion Drag Index (CDI)**: $\text{CDI} = \frac{\text{Demand}}{\text{Remaining Capacity}}$ where capacity is reduced by $7\%$ for every illegally parked vehicle (max $65\%$ reduction).
+* 🚨 **Targeted Enforcement Priority (TEP)**: $\text{TEP} = \text{Violations} \times \text{CDI}$. Auto-ranks the top enforcement hotspots for municipal action.
+* 💸 **Economic Loss Estimation**: Calculates the real-time financial drain on commuters, assuming a baseline time-value of ₹300/hour for affected travelers.
+
+### 3. Interactive Dashboard Web App
+* 🗺️ **Dynamic Leaflet Map** — Real-time interactive map showing color-coded hotspots, map resizing options, and live animations.
+* 🎛️ **What-If Congestion Simulator** — Interactive slider allowing operators to simulate clearing $N$ vehicles and instantly view simulated economic savings (₹), delay reductions, and capacity restorations.
+* 📊 **Chart.js Dual Analytics** — Dynamic charts displaying the selected geohash's demand vs. violations alongside Bengaluru's average city-wide diurnal demand curve.
 
 ---
 
@@ -49,27 +61,27 @@ ml project/
 ├── training/
 │   └── train_pipeline.py     # Full ML training pipeline (LGB + XGB + CatBoost)
 ├── prototype/
-│   ├── server.py             # Flask backend with REST APIs
+│   ├── server.py             # Flask backend with REST APIs & Bottleneck Engine
 │   ├── templates/
 │   │   └── index.html        # Dashboard HTML template
 │   └── static/
-│       ├── app.js            # Frontend JavaScript (map, charts, events)
-│       └── style.css         # Custom CSS styling
+│       ├── app.js            # Frontend JS (Map rendering, Chart.js, simulator)
+│       └── style.css         # Modern dark-themed CSS styling
 ├── results/
 │   └── submission.csv        # Final predictions (41,778 rows)
-├── Approach.md               # Detailed methodology document
-├── Traffic_Demand_Prediction_Submission.ipynb  # Jupyter Notebook
+├── Approach.md               # Detailed ML modeling approach document
+├── Traffic_Demand_Prediction_Submission.ipynb  # Documented Jupyter Notebook
 ├── requirements.txt          # Python dependencies
 └── README.md                 # This file
 ```
 
 ---
 
-## 🚀 How to Run
+## 🚀 How to Run Locally
 
 ### Prerequisites
-- Python 3.10+
-- pip
+* Python 3.10+
+* `pip` package manager
 
 ### 1. Clone the repository
 ```bash
@@ -82,74 +94,29 @@ cd flipkart-gridlock-parkflow-ai
 pip install -r requirements.txt
 ```
 
-### 3. Run the Dashboard
+### 3. Start the Dashboard
 ```bash
 cd prototype
 python server.py
 ```
 
-Open your browser and navigate to **http://127.0.0.1:5000/**
-
-### 4. Run the ML Training Pipeline (optional)
-```bash
-cd training
-python train_pipeline.py
-```
-
----
-
-## 🧠 Technical Architecture
-
-```
-┌──────────────────────────────────────────────────────┐
-│                    ParkFlow AI                        │
-├──────────────────┬───────────────────────────────────┤
-│  ML Engine       │  Dashboard Prototype              │
-│  ─────────       │  ──────────────────               │
-│  • LightGBM      │  • Flask REST API                 │
-│  • XGBoost       │  • Leaflet.js Interactive Map     │
-│  • CatBoost      │  • Chart.js Dual-Axis Analytics   │
-│  • 5-Fold CV     │  • What-If Simulation Engine      │
-│  • OOF Encoding  │  • Priority Dispatch Rankings     │
-├──────────────────┴───────────────────────────────────┤
-│  Data Layer                                          │
-│  • Geohash Spatial Clustering                        │
-│  • Rank-based Spatiotemporal Mapping                 │
-│  • Bottleneck Engine (CDI, TEP, Economic Loss)       │
-└──────────────────────────────────────────────────────┘
-```
-
----
-
-## 📊 Key Metrics
-
-| Metric | Description |
-|--------|-------------|
-| **CDI** (Congestion Drag Index) | Demand ÷ Remaining Capacity — measures bottleneck severity |
-| **TEP** (Targeted Enforcement Priority) | Violations × CDI — ranks locations for dispatch |
-| **Economic Loss (₹)** | Estimated hourly cost of congestion to commuters |
+### 4. Access the App
+Open your browser and navigate to:
+👉 **[http://127.0.0.1:5000/](http://127.0.0.1:5000/)**
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Component | Technology |
-|-----------|------------|
-| ML Models | LightGBM, XGBoost, CatBoost |
-| Backend | Flask (Python) |
-| Frontend | HTML5, CSS3, Vanilla JavaScript |
-| Mapping | Leaflet.js + CARTO tiles |
-| Charts | Chart.js |
-| Data | Pandas, NumPy, Scikit-learn |
+* **ML Algorithms**: LightGBM, XGBoost, CatBoost
+* **Backend Framework**: Flask (Python)
+* **Frontend Design**: HTML5, Custom Vanilla CSS3 (responsive grid + dark mode theme)
+* **Map Engine**: Leaflet.js (CartoDB DarkMatter tiles)
+* **Charts Engine**: Chart.js (v4)
+* **Data Processing**: Pandas, NumPy, Scikit-learn
 
 ---
 
 ## 👨‍💻 Team
 
-**Harshwardhan's Team** — Flipkart Gridlock Hackathon 2.0
-
----
-
-## 📄 License
-
-This project was developed as part of the Flipkart Gridlock Hackathon 2.0.
+**Harshwardhan's Team** — Flipkart Gridlock Hackathon 2.0 (Round 2)
