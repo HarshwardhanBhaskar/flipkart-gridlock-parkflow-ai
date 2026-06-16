@@ -114,7 +114,14 @@ def get_hotspots():
         "tdr1v6": "Kamaraj Road / Commercial Street",
         "tdr1y5": "Embassy Tech Village Entrance",
         "tdr1yj": "Marathahalli Outer Ring Road",
-        "tdr1uw": "Shivaji Nagar Bus Station Cross"
+        "tdr1uw": "Shivaji Nagar Bus Station Cross",
+        "tdr1tr": "KR Market Road (Chickpet Area)",
+        "tdr1v2": "Koramangala 80ft Road / Sony World Signal",
+        "tdr1vg": "Indiranagar 100 Feet Road",
+        "tdr1xf": "Manyata Tech Park Entrance (ORR)",
+        "tdr1u9": "Jayanagar 4th Block Market Road",
+        "tdr4hb": "Kalyan Nagar 80ft Road",
+        "tdr4me": "Sahakar Nagar Main Road"
     }
 
     for _, row in parking_filtered.iterrows():
