@@ -1,0 +1,41 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Virtual environments
+venv/
+venv_new/
+env/
+.env
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Byte-compiled
+*.egg-info/
+dist/
+build/
+
+# CatBoost internal
+catboost_info/
+
+# Large data files (not needed in repo - download separately)
+jan to may police violation_anonymized791b166.csv
+
+# Models (large binary files)
+models/*.zip
+
+# Hedging RL (separate project, not part of submission)
+hedging_rl/
+
+# Jupyter checkpoints
+.ipynb_checkpoints/
