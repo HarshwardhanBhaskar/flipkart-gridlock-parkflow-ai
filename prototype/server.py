@@ -22,6 +22,74 @@ df_parking = None
 df_traffic = None
 geo_mapping = {}
 
+# ---------------------------------------------------------
+# NEIGHBORHOOD AND LOCATION NAME RESOLVER
+# ---------------------------------------------------------
+BENGALURU_NEIGHBORHOODS = [
+    {"name": "Koramangala", "lat": 12.9348, "lon": 77.6189},
+    {"name": "Indiranagar", "lat": 12.9784, "lon": 77.6408},
+    {"name": "HSR Layout", "lat": 12.9119, "lon": 77.6382},
+    {"name": "Jayanagar", "lat": 12.9292, "lon": 77.5888},
+    {"name": "KR Puram", "lat": 13.0040, "lon": 77.6980},
+    {"name": "Hebbal", "lat": 13.0358, "lon": 77.5970},
+    {"name": "Whitefield", "lat": 12.9866, "lon": 77.7300},
+    {"name": "Majestic KBS", "lat": 12.9779, "lon": 77.5724},
+    {"name": "MG Road Metro", "lat": 12.9754, "lon": 77.6068},
+    {"name": "Malleshwaram", "lat": 13.0028, "lon": 77.5700},
+    {"name": "Electronic City", "lat": 12.8485, "lon": 77.6757},
+    {"name": "Silk Board", "lat": 12.9176, "lon": 77.6244},
+    {"name": "Marathahalli", "lat": 12.9523, "lon": 77.6996},
+    {"name": "Bannerghatta Road", "lat": 12.9062, "lon": 77.5986},
+    {"name": "Rajajinagar", "lat": 12.9972, "lon": 77.5583},
+    {"name": "Chickpet KR Market", "lat": 12.9618, "lon": 77.5781},
+    {"name": "Ulsoor Lake", "lat": 12.9822, "lon": 77.6200},
+    {"name": "BTM Layout", "lat": 12.9165, "lon": 77.6047},
+    {"name": "Richmond Town", "lat": 12.9600, "lon": 77.6000},
+    {"name": "Domlur Flyover", "lat": 12.9610, "lon": 77.6387},
+    {"name": "Yelahanka", "lat": 13.0978, "lon": 77.5954},
+    {"name": "Banashankari", "lat": 12.9250, "lon": 77.5460},
+    {"name": "Yeshwanthpur", "lat": 13.0238, "lon": 77.5529},
+    {"name": "R T Nagar", "lat": 13.0185, "lon": 77.5938},
+    {"name": "Bellandur Outer Ring Road", "lat": 12.9279, "lon": 77.6800},
+]
+
+dummy_names = {
+    "tdr1w3": "KR Puram Junction / NH 44",
+    "tdr32j": "Whitefield ITPL Main Road",
+    "tdr1ey": "Hebbal Flyover Access Road",
+    "tdr1v6": "Kamaraj Road / Commercial Street",
+    "tdr1y5": "Embassy Tech Village Entrance",
+    "tdr1yj": "Marathahalli Outer Ring Road",
+    "tdr1uw": "Shivaji Nagar Bus Station Cross",
+    "tdr1tr": "KR Market Road (Chickpet Area)",
+    "tdr1v2": "Koramangala 80ft Road / Sony World Signal",
+    "tdr1vg": "Indiranagar 100 Feet Road",
+    "tdr1xf": "Manyata Tech Park Entrance (ORR)",
+    "tdr1u9": "Jayanagar 4th Block Market Road",
+    "tdr4hb": "Kalyan Nagar 80ft Road",
+    "tdr4me": "Sahakar Nagar Main Road"
+}
+
+def get_location_name(geohash, lat, lon):
+    if geohash in dummy_names:
+        return dummy_names[geohash]
+    closest_nh = "Bengaluru City"
+    min_dist = float('inf')
+    for nh in BENGALURU_NEIGHBORHOODS:
+        dist = (lat - nh["lat"])**2 + (lon - nh["lon"])**2
+        if dist < min_dist:
+            min_dist = dist
+            closest_nh = nh["name"]
+    hash_val = sum(ord(c) for c in geohash)
+    suffixes = [
+        "Junction Corridor", "Main Road", "Flyover Link", "Service Road", 
+        "Commercial Street", "Cross Road", "Transit Hub", "Market Area", 
+        "Ring Road", "Access Road"
+    ]
+    suffix = suffixes[hash_val % len(suffixes)]
+    return f"{closest_nh} - {suffix}"
+
+
 def load_data_and_map():
     global df_parking, df_traffic, geo_mapping
     print("Loading datasets...")
@@ -106,24 +174,6 @@ def get_hotspots():
     traffic_lookup = dict(zip(traffic_subset['geohash'], traffic_subset['demand']))
     global_traffic_mean = df_traffic[df_traffic['hour'] == hour]['demand'].mean() if len(df_traffic[df_traffic['hour'] == hour]) > 0 else 0.1
 
-    # Map name mapping for demo
-    dummy_names = {
-        "tdr1w3": "KR Puram Junction / NH 44",
-        "tdr32j": "Whitefield ITPL Main Road",
-        "tdr1ey": "Hebbal Flyover Access Road",
-        "tdr1v6": "Kamaraj Road / Commercial Street",
-        "tdr1y5": "Embassy Tech Village Entrance",
-        "tdr1yj": "Marathahalli Outer Ring Road",
-        "tdr1uw": "Shivaji Nagar Bus Station Cross",
-        "tdr1tr": "KR Market Road (Chickpet Area)",
-        "tdr1v2": "Koramangala 80ft Road / Sony World Signal",
-        "tdr1vg": "Indiranagar 100 Feet Road",
-        "tdr1xf": "Manyata Tech Park Entrance (ORR)",
-        "tdr1u9": "Jayanagar 4th Block Market Road",
-        "tdr4hb": "Kalyan Nagar 80ft Road",
-        "tdr4me": "Sahakar Nagar Main Road"
-    }
-
     for _, row in parking_filtered.iterrows():
         bg_geo = row['geohash']
         violations = row['violation_count']
@@ -136,7 +186,7 @@ def get_hotspots():
         metrics = calculate_traffic_impact(violations, baseline_demand)
 
         # Get name or general location name
-        loc_name = dummy_names.get(bg_geo, f"Geohash {bg_geo} (Bengaluru)")
+        loc_name = get_location_name(bg_geo, row['latitude'], row['longitude'])
 
         hotspots.append({
             "geohash": bg_geo,
