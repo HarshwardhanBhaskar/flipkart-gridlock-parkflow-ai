@@ -3,17 +3,19 @@ import pandas as pd
 import numpy as np
 from flask import Flask, jsonify, request, render_template
 
+base_dir = os.path.dirname(os.path.abspath(__file__))
+
 app = Flask(
     __name__,
-    template_folder=r"c:\Users\hwbha\c++ code\ml project\prototype\templates",
-    static_folder=r"c:\Users\hwbha\c++ code\ml project\prototype\static"
+    template_folder=os.path.join(base_dir, "templates"),
+    static_folder=os.path.join(base_dir, "static")
 )
 
 # ---------------------------------------------------------
 # PATHS AND DATA LOADING
 # ---------------------------------------------------------
-parking_stats_path = r"c:\Users\hwbha\c++ code\ml project\data\parking\parking_stats.csv"
-traffic_lookup_path = r"c:\Users\hwbha\c++ code\ml project\data\parking\traffic_demand_lookup.csv"
+parking_stats_path = os.path.normpath(os.path.join(base_dir, "..", "data", "parking", "parking_stats.csv"))
+traffic_lookup_path = os.path.normpath(os.path.join(base_dir, "..", "data", "parking", "traffic_demand_lookup.csv"))
 
 # Global data holders
 df_parking = None
