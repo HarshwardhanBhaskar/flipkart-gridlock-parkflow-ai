@@ -117,6 +117,8 @@ Open your browser and navigate to:
 
 ---
 
-## 👨‍💻 Team
+## 👨‍💻 Developer & Team
 
-**Harshwardhan's Team** — Flipkart Gridlock Hackathon 2.0 (Round 2)
+* **Team**: **HB Technologies** (Solo Participant)
+* **Author**: Harshwardhan Bhaskar
+
